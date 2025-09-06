@@ -78,7 +78,7 @@ export default function CreateCommentPage() {
               placeholder="Your name"
             />
             {error(
-              touched.body !== undefined && touched.body && !form.body.trim()
+              touched.name !== undefined && touched.name && !form.name.trim()
             )}
           </div>
 
@@ -108,7 +108,7 @@ export default function CreateCommentPage() {
               rows={5}
             />
             {error(
-              touched.name !== undefined && touched.name && !form.name.trim()
+              touched.body !== undefined && touched.body && !form.body.trim()
             )}
           </div>
 
