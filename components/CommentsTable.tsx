@@ -6,7 +6,7 @@ import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
-type Comment = {
+export type Comment = {
   postId: number;
   id: number;
   name: string;
@@ -27,8 +27,14 @@ export default function CommentsTable({
     const raw = localStorage.getItem("addedComments");
     if (raw) {
       const extras: Comment[] = JSON.parse(raw);
-      // gabungkan di atas agar terlihat duluan
-      setData((d) => [...extras, ...d]);
+      setData((prev) => {
+        // gabung tapi hilangkan duplikat berdasarkan id
+        const merged = [...extras, ...prev].filter(
+          (item, index, self) =>
+            index === self.findIndex((c) => c.id === item.id)
+        );
+        return merged;
+      });
     }
   }, []);
 
@@ -71,12 +77,9 @@ export default function CommentsTable({
           <InputText
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Search comments..."
+            placeholder="Search name/email/body"
             className="w-72 max-w-full"
           />
-        </span>
-        <span className="text-sm text-gray-500">
-          Cari di kolom: name / email / body
         </span>
       </div>
 

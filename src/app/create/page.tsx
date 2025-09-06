@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import type { Comment } from "../../../components/CommentsTable";
 
 type Form = { name: string; email: string; body: string };
 const init: Form = { name: "", email: "", body: "" };
@@ -38,13 +39,16 @@ export default function CreateCommentPage() {
     } catch {}
 
     // Simpan ke localStorage agar muncul di tabel
-    const newItem = {
+    const raw = localStorage.getItem("addedComments");
+    const arr: Comment[] = raw ? JSON.parse(raw) : [];
+    const baseId = 500;
+    const nextId = arr.length > 0 ? arr[0].id + 1 : baseId + 1;
+
+    const newItem: Comment = {
       postId: 0,
-      id: Date.now(), // id lokal
+      id: nextId,
       ...form,
     };
-    const raw = localStorage.getItem("addedComments");
-    const arr = raw ? JSON.parse(raw) : [];
     arr.unshift(newItem);
     localStorage.setItem("addedComments", JSON.stringify(arr));
 
@@ -74,7 +78,7 @@ export default function CreateCommentPage() {
               placeholder="Your name"
             />
             {error(
-              touched.name !== undefined && touched.name && !form.name.trim()
+              touched.body !== undefined && touched.body && !form.body.trim()
             )}
           </div>
 

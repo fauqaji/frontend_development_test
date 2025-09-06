@@ -1,5 +1,5 @@
 import CommentsTable from "../../../components/CommentsTable";
-
+import LogoutButton from "../../../components/LogoutButton";
 async function getComments() {
   const res = await fetch("https://jsonplaceholder.typicode.com/comments", {
     cache: "no-store", // SSR fresh
@@ -19,16 +19,7 @@ export default async function DashboardPage() {
             <a href="/create" className="btn btn-success rounded-xl px-4 py-2">
               Create Comment
             </a>
-            <a
-              href="/login"
-              onClick={() => {
-                // hapus cookie auth (client akan eksekusi)
-                document.cookie = "auth=; path=/; max-age=0;";
-              }}
-              className="btn btn-outline-danger rounded-xl px-4 py-2"
-            >
-              Logout
-            </a>
+            <LogoutButton />
           </div>
         </div>
 
