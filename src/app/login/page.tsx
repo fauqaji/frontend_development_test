@@ -21,7 +21,7 @@ export default function LoginPage() {
     router.replace("/dashboard");
   };
 
-  const errorClass = "text-red-600 text-sm mt-1";
+  const errorClass = "!text-red-600 text-sm mt-1";
   const inputClass =
     "form-control w-full rounded-lg border p-2 focus:outline-none focus:ring " +
     "border-gray-300 focus:border-blue-500"; // bootstrap + tailwind

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Comment } from "../../../components/CommentsTable";
+import Link from "next/link";
 
 type Form = { name: string; email: string; body: string };
 const init: Form = { name: "", email: "", body: "" };
@@ -56,7 +57,7 @@ export default function CreateCommentPage() {
   };
 
   const error = (cond: boolean, msg = "Field is required") =>
-    cond ? <p className="text-red-600 text-sm mt-1">{msg}</p> : null;
+    cond ? <p className="!text-red-600 text-sm mt-1">{msg}</p> : null;
 
   const input =
     "form-control w-full rounded-lg border p-2 focus:outline-none focus:ring border-gray-300 focus:border-blue-500";
@@ -93,7 +94,7 @@ export default function CreateCommentPage() {
             />
             {touched.email && !form.email.trim() && error(true)}
             {touched.email && !!form.email && !isEmail(form.email) && (
-              <p className="text-red-600 text-sm mt-1">Email is invalid</p>
+              <p className="!text-red-600 text-sm mt-1">Email is invalid</p>
             )}
           </div>
 
@@ -119,12 +120,12 @@ export default function CreateCommentPage() {
             >
               Submit
             </button>
-            <a
+            <Link
               href="/dashboard"
               className="btn btn-outline-secondary rounded-xl px-4 py-2"
             >
               Cancel
-            </a>
+            </Link>
           </div>
         </form>
       </div>

@@ -5,6 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog"; // 1. Impor komponen dialog
 
 export type Comment = {
   postId: number;
@@ -22,13 +23,11 @@ export default function CommentsTable({
   const [globalFilter, setGlobalFilter] = useState("");
   const [data, setData] = useState<Comment[]>(initialData ?? []);
 
-  // Merge created items dari localStorage (agar terlihat di tabel setelah submit)
   useEffect(() => {
     const raw = localStorage.getItem("addedComments");
     if (raw) {
       const extras: Comment[] = JSON.parse(raw);
       setData((prev) => {
-        // gabung tapi hilangkan duplikat berdasarkan id
         const merged = [...extras, ...prev].filter(
           (item, index, self) =>
             index === self.findIndex((c) => c.id === item.id)
@@ -49,9 +48,9 @@ export default function CommentsTable({
     );
   }, [globalFilter, data]);
 
+  // Fungsi delete tetap sama, sekarang dipanggil setelah konfirmasi
   const deleteRow = (id: number) => {
     setData((d) => d.filter((c) => c.id !== id));
-    // kalau yang dihapus adalah item tambahan (localStorage), sinkronkan
     const raw = localStorage.getItem("addedComments");
     if (raw) {
       const extras: Comment[] = JSON.parse(raw).filter(
@@ -61,16 +60,32 @@ export default function CommentsTable({
     }
   };
 
+  // 2. Buat fungsi untuk menampilkan dialog konfirmasi
+  const confirmDelete = (id: number) => {
+    confirmDialog({
+      message: "Apakah Anda yakin ingin menghapus data ini?",
+      header: "Konfirmasi Hapus",
+      icon: "pi pi-info-circle",
+      acceptClassName: "p-button-danger",
+      accept: () => deleteRow(id), // Jalankan deleteRow jika "Yes" ditekan
+      reject: () => {}, // Tidak melakukan apa-apa jika "No" ditekan
+    });
+  };
+
+  // 3. Ubah tombol Delete untuk memanggil fungsi konfirmasi
   const actionBody = (row: Comment) => (
     <Button
       label="Delete"
-      onClick={() => deleteRow(row.id)}
+      onClick={() => confirmDelete(row.id)}
       className="p-button-danger"
     />
   );
 
   return (
     <div className="space-y-3">
+      {/* 4. Tambahkan komponen ConfirmDialog di sini */}
+      <ConfirmDialog />
+
       <div className="flex items-center gap-2">
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
